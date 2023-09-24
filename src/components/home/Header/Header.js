@@ -7,22 +7,23 @@ import { logo, logoLight } from "../../../assets/images";
 import Image from "../../designLayouts/Image";
 import { navBarList } from "../../../constants";
 import Flex from "../../designLayouts/Flex";
-import { FaCaretDown, FaUser, FaShoppingCart } from "react-icons/fa"; // Import the icons
+import { FaCaretDown, FaUser, FaShoppingCart } from "react-icons/fa";
 
 const Header = () => {
   const [showMenu, setShowMenu] = useState(true);
   const [sidenav, setSidenav] = useState(false);
   const [category, setCategory] = useState(false);
   const [brand, setBrand] = useState(false);
-  const [showUser, setShowUser] = useState(false); // Added state for user dropdown
+  const [showUser, setShowUser] = useState(true); // Always show user dropdown in sidenav
+  const [isCaretDownOpen, setCaretDownOpen] = useState(false); // Control the open/close state of FaCaretDown
   const location = useLocation();
 
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth < 667) {
-        setShowMenu(false);
+        setShowMenu(false); // Show the menu on small screens
       } else {
-        setShowMenu(true);
+        setShowMenu(true); // Hide the menu on larger screens
       }
     };
 
@@ -46,7 +47,7 @@ const Header = () => {
             <div className="flex-shrink-0">
               <Image
                 className="max-w-[200px] w-full h-auto"
-                imgSrc={logo} // Assuming `logo` is the path to your logo image
+                imgSrc={logo}
                 alt="Logo"
               />
             </div>
@@ -69,49 +70,49 @@ const Header = () => {
                     <li>{title}</li>
                   </NavLink>
                 ))}
-                {/* Add the FaCaretDown, FaUser, and FaShoppingCart icons here */}
-                <div className="flex items-center gap-2">
-                  {/* Add the user dropdown here */}
-                  <div
-                    onClick={() => setShowUser(!showUser)}
-                    className="relative cursor-pointer"
-                  >
-                    <FaCaretDown className="text-[#767676] text-base hover:text-[#262626]" />
-                    {showUser && (
-                      <motion.ul
-                        initial={{ y: 30, opacity: 0 }}
-                        animate={{ y: 0, opacity: 1 }}
-                        transition={{ duration: 0.5 }}
-                        className="absolute top-12 right-0 z-50 bg-white w-44 text-[#767676] h-auto p-4 pb-6 border-[1px] border-[#E4E4E7] rounded-md shadow-lg"
-                      >
-                        <Link to="/signin">
-                          <li className="text-gray-400 px-4 py-1 hover:text-[#262626] hover:bg-[#F5F5F7] duration-300 cursor-pointer">
-                            Login
-                          </li>
-                        </Link>
-                        <Link onClick={() => setShowUser(false)} to="/signup">
-                          <li className="text-gray-400 px-4 py-1 hover:text-[#262626] hover:bg-[#F5F5F7] duration-300 cursor-pointer">
-                            Sign Up
-                          </li>
-                        </Link>
-                        <Link to="/signin">
-                          <li className="text-gray-400 px-4 py-1 hover:text-[#262626] hover:bg-[#F5F5F7] duration-300 cursor-pointer">
-                            Profile
-                          </li>
-                        </Link>
+                <div
+                  onClick={() => setCaretDownOpen(!isCaretDownOpen)}
+                  className="relative cursor-pointer"
+                >
+                  <FaCaretDown
+                    className={`text-base ${
+                      isCaretDownOpen ? "text-[#262626]" : "text-[#767676]"
+                    } hover:text-[#262626]`}
+                  />
+                  {isCaretDownOpen && (
+                    <motion.ul
+                      initial={{ y: 30, opacity: 0 }}
+                      animate={{ y: 0, opacity: 1 }}
+                      transition={{ duration: 0.5 }}
+                      className="absolute top-12 right-0 z-50 bg-white w-44 text-[#767676] h-auto p-4 pb-6 border-[1px] border-[#E4E4E7] rounded-md shadow-lg"
+                    >
+                      <Link to="/signin">
                         <li className="text-gray-400 px-4 py-1 hover:text-[#262626] hover:bg-[#F5F5F7] duration-300 cursor-pointer">
-                          Others
+                          Login
                         </li>
-                      </motion.ul>
-                    )}
-                  </div>
-                  <Link to="/signin">
-                    <FaUser className="text-[#767676] text-base cursor-pointer hover:text-[#262626]" />
-                  </Link>
-                  <Link to="/cart">
-                    <FaShoppingCart className="text-[#767676] text-base cursor-pointer hover:text-[#262626]" />
-                  </Link>
+                      </Link>
+                      <Link onClick={() => setCaretDownOpen(false)} to="/signup">
+                        <li className="text-gray-400 px-4 py-1 hover:text-[#262626] hover:bg-[#F5F5F7] duration-300 cursor-pointer">
+                          Sign Up
+                        </li>
+                      </Link>
+                      <Link to="/signin">
+                        <li className="text-gray-400 px-4 py-1 hover:text-[#262626] hover:bg-[#F5F5F7] duration-300 cursor-pointer">
+                          Profile
+                        </li>
+                      </Link>
+                      <li className="text-gray-400 px-4 py-1 hover:text-[#262626] hover:bg-[#F5F5F7] duration-300 cursor-pointer">
+                        Rewards
+                      </li>
+                    </motion.ul>
+                  )}
                 </div>
+                <Link to="/signin">
+                  <FaUser className="text-[#767676] text-base cursor-pointer hover:text-[#262626]" />
+                </Link>
+                <Link to="/cart">
+                  <FaShoppingCart className="text-[#767676] text-base cursor-pointer hover:text-[#262626]" />
+                </Link>
               </motion.ul>
             )}
             <HiMenuAlt2
@@ -147,14 +148,54 @@ const Header = () => {
                           </NavLink>
                         </li>
                       ))}
+                      {/* Add these links explicitly in the sidenav */}
+                      <li className="font-normal hover:font-bold items-center text-lg text-gray-200 hover:underline underline-offset-[4px] decoration-[1px] hover:text-white md:border-r-[2px] border-r-gray-300 hoverEffect last:border-r-0">
+                        <NavLink
+                          to="/signin"
+                          state={{ data: location.pathname.split("/")[1] }}
+                          onClick={() => setSidenav(false)}
+                        >
+                          Profile
+                        </NavLink>
+                      </li>
+                      <li className="font-normal hover:font-bold items-center text-lg text-gray-200 hover:underline underline-offset-[4px] decoration-[1px] hover:text-white md:border-r-[2px] border-r-gray-300 hoverEffect last:border-r-0">
+                        <NavLink
+                          to="/signin"
+                          state={{ data: location.pathname.split("/")[1] }}
+                          onClick={() => setSidenav(false)}
+                        >
+                          Login
+                        </NavLink>
+                      </li>
+                      <li className="font-normal hover:font-bold items-center text-lg text-gray-200 hover:underline underline-offset-[4px] decoration-[1px] hover:text-white md:border-r-[2px] border-r-gray-300 hoverEffect last:border-r-0">
+                        <NavLink
+                          to="/signup"
+                          state={{ data: location.pathname.split("/")[1] }}
+                          onClick={() => setSidenav(false)}
+                        >
+                          Sign Up
+                        </NavLink>
+                      </li>
+                      <li className="font-normal hover:font-bold items-center text-lg text-gray-200 hover:underline underline-offset-[4px] decoration-[1px] hover:text-white md:border-r-[2px] border-r-gray-300 hoverEffect last:border-r-0">
+                        <NavLink
+                          to="/signin"
+                          state={{ data: location.pathname.split("/")[1] }}
+                          onClick={() => setSidenav(false)}
+                        >
+                          Rewards
+                        </NavLink>
+                      </li>
                     </ul>
+                    {/* End of added links */}
                     <div className="mt-4">
                       <h1
                         onClick={() => setCategory(!category)}
                         className="flex justify-between text-base cursor-pointer items-center font-titleFont mb-2"
                       >
                         Shop by Category{" "}
-                        <span className="text-lg">{category ? "-" : "+"}</span>
+                        <span className="text-lg">
+                          {category ? "-" : "+"}
+                        </span>
                       </h1>
                       {category && (
                         <motion.ul
@@ -177,7 +218,9 @@ const Header = () => {
                         className="flex justify-between text-base cursor-pointer items-center font-titleFont mb-2"
                       >
                         Shop by Brand
-                        <span className="text-lg">{brand ? "-" : "+"}</span>
+                        <span className="text-lg">
+                          {brand ? "-" : "+"}
+                        </span>
                       </h1>
                       {brand && (
                         <motion.ul

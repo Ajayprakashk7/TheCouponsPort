@@ -10,6 +10,7 @@ const HeaderBottom = () => {
 
   const [searchQuery, setSearchQuery] = useState("");
   const [filteredProducts, setFilteredProducts] = useState([]);
+  const [isSearchResultsOpen, setSearchResultsOpen] = useState(false);
 
   useEffect(() => {
     const filtered = paginationItems.filter((item) =>
@@ -20,13 +21,23 @@ const HeaderBottom = () => {
 
   const handleSearch = (e) => {
     setSearchQuery(e.target.value);
+    setSearchResultsOpen(true);
+  };
+
+  const handleProductSelect = (item) => {
+    navigate(`/product/${item.productName.toLowerCase().split(" ").join("")}`, {
+      state: {
+        item: item,
+      },
+    });
+    setSearchResultsOpen(false);
   };
 
   return (
     <div className="w-full bg-[#F5F5F3] relative">
       <div className="max-w-container mx-auto">
         <div className="w-full px-4 pb-4">
-          <div className="text-center">
+          <div className="text-center relative">
             <div className="relative inline-block w-full md:max-w-[600px] mt-4">
               <input
                 className="w-full h-[50px] px-6 text-base text-primeColor bg-white outline-none placeholder:text-[#C4C4C4] placeholder:text-[14px] rounded-xl"
@@ -36,23 +47,11 @@ const HeaderBottom = () => {
                 placeholder="Search your products here"
               />
               <FaSearch className="absolute top-1/2 transform -translate-y-1/2 right-4 w-5 h-5 text-primeColor" />
-              {searchQuery && (
-                <div className="w-full h-auto mt-2 bg-white shadow-2xl overflow-y-scroll scrollbar-hide">
+              {isSearchResultsOpen && searchQuery && (
+                <div className="w-full h-auto mt-[55px] bg-white shadow-2xl overflow-y-scroll scrollbar-hide absolute top-0 left-0 right-0 z-50"> {/* Position the search results below the search input and above all other content */}
                   {filteredProducts.map((item) => (
                     <div
-                      onClick={() =>
-                        navigate(
-                          `/product/${item.productName
-                            .toLowerCase()
-                            .split(" ")
-                            .join("")}`,
-                          {
-                            state: {
-                              item: item,
-                            },
-                          }
-                        )
-                      }
+                      onClick={() => handleProductSelect(item)}
                       key={item._id}
                       className="max-w-[600px] h-28 bg-gray-100 mb-3 flex items-center gap-3 mx-auto"
                     >
