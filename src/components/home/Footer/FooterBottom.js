@@ -2,6 +2,8 @@ import React from "react";
 import { AiOutlineCopyright } from "react-icons/ai";
 
 const FooterBottom = () => {
+  const isSmallScreen = window.innerWidth <= 767; // Check if the screen width is less than or equal to 768px
+
   return (
     <div className="w-full bg-[#F5F5F3] group">
       <div className="max-w-container mx-auto border-t-[1px] py-6 md:py-10">
@@ -12,9 +14,17 @@ const FooterBottom = () => {
           Copyright 2023 | TheCouponsPort | All Rights Reserved |
           <a href="https://ajayprakash.live" target="_blank" rel="noreferrer">
             <span className="ml-1 font-medium group-hover:text-primeColor">
-              Powered by Ajayprakash
+              Design by Ajay Prakash
             </span>
           </a>
+          {isSmallScreen && (
+            <>
+              <br />
+              <br />
+              <br />
+              <br />
+            </>
+          )}
         </p>
       </div>
     </div>

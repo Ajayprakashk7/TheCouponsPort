@@ -42,6 +42,31 @@ export const navBarList = [
   },
 ];
 // =================== NavBarList End here ======================
+
+export const BottomNavBarList = [
+    {
+      _id: 2001,
+      title: "Home",
+      link: "/",
+    },
+    {
+      _id: 2002,
+      title: "Coupon",
+      link: "/coupon",
+    },
+    {
+      _id: 2003,
+      title: "Shop",
+      link: "/shop",
+    },
+    {
+      _id: 2004,
+      title: "Profile",
+      link: "/",
+    },
+  ];
+  
+  
 // =================== Special Offer data Start here ============
 export const SplOfferData = [
   {

@@ -1,40 +1,75 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { RiShoppingCart2Fill } from "react-icons/ri";
-import { MdSwitchAccount } from "react-icons/md";
 import { useSelector } from "react-redux";
+import Box from "@mui/material/Box";
+import BottomNavigation from "@mui/material/BottomNavigation";
+import BottomNavigationAction from "@mui/material/BottomNavigationAction";
+import HomeIcon from "@mui/icons-material/Home";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import PersonIcon from "@mui/icons-material/Person";
+import RedeemIcon from "@mui/icons-material/Redeem";
+import { BottomNavBarList } from "../../constants/index";
 
-const SpecialCase = () => {
+const CustomBottomNavigation = () => {
   const products = useSelector((state) => state.TheCouponsportReducer.products);
-  return (
-    <div className="fixed top-52 right-2 z-20 hidden md:flex flex-col gap-2">
-      <Link to="/signin">
-        <div className="bg-white w-16 h-[70px] rounded-md flex flex-col gap-1 text-[#33475b] justify-center items-center shadow-testShadow overflow-x-hidden group cursor-pointer">
-          <div className="flex justify-center items-center">
-            <MdSwitchAccount className="text-2xl -translate-x-12 group-hover:translate-x-3 transition-transform duration-200" />
+  const [value, setValue] = useState(0);
+  const [isVisible, setIsVisible] = useState(true);
 
-            <MdSwitchAccount className="text-2xl -translate-x-3 group-hover:translate-x-12 transition-transform duration-200" />
-          </div>
-          <p className="text-xs font-semibold font-titleFont">Profile</p>
-        </div>
-      </Link>
-      <Link to="/cart">
-        <div className="bg-white w-16 h-[70px] rounded-md flex flex-col gap-1 text-[#33475b] justify-center items-center shadow-testShadow overflow-x-hidden group cursor-pointer relative">
-          <div className="flex justify-center items-center">
-            <RiShoppingCart2Fill className="text-2xl -translate-x-12 group-hover:translate-x-3 transition-transform duration-200" />
+  useEffect(() => {
+    // Define a function to check if the screen width is less than a certain threshold
+    const isSmallScreen = () => window.innerWidth <= 767; // Adjust the threshold as needed
 
-            <RiShoppingCart2Fill className="text-2xl -translate-x-3 group-hover:translate-x-12 transition-transform duration-200" />
-          </div>
-          <p className="text-xs font-semibold font-titleFont">Buy Now</p>
-          {products.length > 0 && (
-            <p className="absolute top-1 right-2 bg-primeColor text-white text-xs w-4 h-4 rounded-full flex items-center justify-center font-semibold">
-              {products.length}
-            </p>
-          )}
-        </div>
-      </Link>
+    const handleResize = () => {
+      if (isSmallScreen()) {
+        setIsVisible(true); // Show the navigation on small screens
+      } else {
+        setIsVisible(false); // Hide the navigation on larger screens
+      }
+    };
+
+    // Initial check on component mount
+    handleResize();
+
+    // Add a window resize listener to toggle navigation visibility
+    window.addEventListener("resize", handleResize);
+
+    // Clean up the listener on component unmount
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
+  return isVisible ? (
+    <div className="fixed bottom-0 left-0 right-0 bg-white shadow-topShadow z-10 pb-1.5">
+      <BottomNavigation
+        showLabels
+        value={value}
+        onChange={(event, newValue) => {
+          setValue(newValue);
+        }}
+      >
+        {BottomNavBarList.map((item, index) => (
+          <BottomNavigationAction
+            key={index}
+            label={item.title}
+            icon={
+              index === 0 ? (
+                <HomeIcon />
+              ) : index === 1 ? (
+                <RedeemIcon />
+              ) : index === 2 ? (
+                <ShoppingCartIcon />
+              ) : (
+                <PersonIcon />
+              )
+            }
+            component={Link}
+            to={item.link}
+          />
+        ))}
+      </BottomNavigation>
     </div>
-  );
+  ) : null;
 };
 
-export default SpecialCase;
+export default CustomBottomNavigation;

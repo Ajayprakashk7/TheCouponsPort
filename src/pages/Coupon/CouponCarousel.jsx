@@ -1,20 +1,18 @@
-// CouponCarousel.js
-
 import React from 'react';
+import { makeStyles } from '@material-ui/core/styles';
+import Typography from '@material-ui/core/Typography';
+import Paper from '@material-ui/core/Paper';
 import Carousel from 'react-multi-carousel';
 import 'react-multi-carousel/lib/styles.css';
-import { Paper, Typography } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
-import { Link } from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
   storeContainer: {
-    margin: theme.spacing(1),
     cursor: 'pointer',
     textAlign: 'center',
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
+    marginRight: theme.spacing(2), 
   },
   storeImage: {
     maxWidth: '100%',
@@ -35,7 +33,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const CouponCarousel = () => {
+const Coupon = () => {
   const classes = useStyles();
 
   const responsive = {
@@ -54,39 +52,45 @@ const CouponCarousel = () => {
   };
 
   const stores = [
-    { id: 1, name: 'Flipkart', imageUrl: require('../Coupon/stores/2.jpg') },
-    { id: 2, name: 'Amazon', imageUrl: require('../Coupon/stores/1.jpg') },
-    { id: 3, name: 'Jabong', imageUrl: require('../Coupon/stores/4.jpg') },
-    { id: 4, name: 'Myntra', imageUrl: require('../Coupon/stores/3.jpg') },
-    { id: 5, name: 'Paytm', imageUrl: require('../Coupon/stores/5.jpg') },
-    { id: 6, name: 'Snapdeal', imageUrl: require('../Coupon/stores/6.jpg') },
+    { id: 1, name: 'Flipkart', imageUrl: require('../Coupon/stores/2.jpg'), url: 'https://www.flipkart.com' },
+    { id: 2, name: 'Amazon', imageUrl: require('../Coupon/stores/1.jpg'), url: 'https://www.amazon.in' },
+    { id: 3, name: 'Zomato', imageUrl: require('../Coupon/stores/4.jpg'), url: 'https://www.zomato.com' },
+    { id: 4, name: 'Myntra', imageUrl: require('../Coupon/stores/3.jpg'), url: 'https://www.myntra.com' },
+    { id: 5, name: 'Paytm', imageUrl: require('../Coupon/stores/5.jpg'), url: 'https://www.paytm.com' },
+    { id: 6, name: 'Snapdeal', imageUrl: require('../Coupon/stores/6.jpg'), url: 'https://www.snapdeal.com' },
   ];
+
+  const handleStoreClick = (url) => {
+    window.open(url, '_blank');
+  };
 
   return (
     <div className={classes.carouselContainer}>
       <Typography variant="h6">Featured Stores</Typography>
       <Carousel
         responsive={responsive}
+        swipeable={true}
+        draggable={true}
+        ssr={true}
         autoPlay={true}
+        arrows={false}
         autoPlaySpeed={2000}
         infinite={true}
         partialVisible={true}
       >
         {stores.map((store) => (
-          <Link to={`/Coupon/${store.name.toLowerCase()}`} key={store.id}>
-            <div className={classes.storeContainer}>
-              <Paper>
-                <img className={classes.storeImage} src={store.imageUrl} alt={store.name} />
-              </Paper>
-              <Typography variant="body2" className={classes.storeText}>
-                {store.name}
-              </Typography>
-            </div>
-          </Link>
+          <div className={classes.storeContainer} key={store.id} onClick={() => handleStoreClick(store.url)}>
+            <Paper>
+              <img className={classes.storeImage} src={store.imageUrl} alt={store.name} />
+            </Paper>
+            <Typography variant="body2" className={classes.storeText}>
+              {store.name}
+            </Typography>
+          </div>
         ))}
       </Carousel>
     </div>
   );
 };
 
-export default CouponCarousel;
+export default Coupon;

@@ -111,7 +111,7 @@ const Footer = () => {
               Account Details
             </li>
             <li className="text-sm md:text-base text-lightText hover:text-black hover:underline decoration-[1px] decoration-gray-500 underline-offset-2 cursor-pointer duration-300">
-              Payment Options
+              About Us
             </li>
           </ul>
         </div>

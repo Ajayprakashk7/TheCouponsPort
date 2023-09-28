@@ -1,18 +1,21 @@
 import React, { useState } from 'react';
-import CouponCard from './CouponCard';
 import { amazonCoupons } from './amazon';
 import { flipkartCoupons } from './flipkart';
 import { myntraCoupons } from './myntra';
 import { snapdealCoupons } from './snapdeal';
-import { jabongCoupons } from './jabong';
-import { shopcluesCoupons } from './shopclues';
+import { zomatoCoupons } from './zomato';
 import { paytmCoupons } from './paytm';
-import Carousel from 'react-multi-carousel';
-import 'react-multi-carousel/lib/styles.css';
 import { Paper, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import Banner from "../../components/Banner/Banner";
-import { Link } from 'react-router-dom'; // Import Link for store routing
+import { Link } from 'react-router-dom';
+import StoreCarousel from './StoreCarousel';
+
+// Define a common style object for reusable styles
+const commonStyle = {
+  border: '1px solid #fff',
+  padding: '10px 20px',
+};
 
 const useStyles = makeStyles((theme) => ({
   storeContainer: {
@@ -36,9 +39,9 @@ const useStyles = makeStyles((theme) => ({
   carouselContainer: {
     marginTop: theme.spacing(2),
     marginBottom: theme.spacing(2),
-    paddingLeft: theme.spacing(4), // Add gap on the left side
-    paddingRight: theme.spacing(1), // Add gap on the right side
-    maxWidth: 'calc(100% - 40px)', // Adjust the maximum width as needed
+    paddingLeft: theme.spacing(4),
+    paddingRight: theme.spacing(1),
+    maxWidth: 'calc(100% - 40px)',
   },
   centerContent: {
     display: 'flex',
@@ -47,8 +50,66 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const CouponCard = ({ logoSrc, title, code, validTill, cardColor }) => {
+  const [copied, setCopied] = useState(false);
+
+  const handleCopyCode = () => {
+    navigator.clipboard.writeText(code);
+    setCopied(true);
+
+    setTimeout(() => {
+      setCopied(false);
+    }, 3000);
+  };
+
+  const couponCardStyles = {
+    background: cardColor,
+    color: '#fff',
+    textAlign: 'center',
+    padding: '20px',
+    borderRadius: '15px',
+    boxShadow: '0 10px 10px 0 rgba(0, 0, 0, 0.15)',
+    position: 'relative',
+    minWidth: '250px',
+  };
+
+  const couponHeaderStyles = {
+    textAlign: 'center',
+    marginBottom: '20px',
+  };
+
+  const logoStyles = {
+    width: '80px',
+    borderRadius: '8px',
+  };
+
+  const couponRowStyles = {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    margin: '15px 0',
+  };
+
+  return (
+    <div style={couponCardStyles} className="coupon-card">
+      <div style={couponHeaderStyles}>
+        <img src={logoSrc} style={logoStyles} alt="Store Logo" />
+      </div>
+      <h3>{title}</h3>
+      <div style={couponRowStyles} className="coupon-row">
+        <span id="cpnCode" style={{ ...commonStyle, borderRight: 0 }}>
+          {code}
+        </span>
+        <button id="cpnBtn" style={{ ...commonStyle, background: '#fff', color: '#7158fe', cursor: 'pointer' }} onClick={handleCopyCode}>
+          {copied ? 'COPIED' : 'COPY CODE'}
+        </button>
+      </div>
+      <p>Valid Till: {validTill}</p>
+    </div>
+  );
+};
+
 const Coupon = () => {
-  // State to hold sorted coupons
   const [sortedCoupons, setSortedCoupons] = useState([]);
 
   const couponCardContainerStyles = {
@@ -61,7 +122,6 @@ const Coupon = () => {
   const classes = useStyles();
 
   const handleStoreChange = (storeName) => {
-    // Sort coupons by store ID
     let sortedCoupons = [];
 
     switch (storeName) {
@@ -77,20 +137,16 @@ const Coupon = () => {
       case 'snapdeal':
         sortedCoupons = snapdealCoupons;
         break;
-      case 'jabong':
-        sortedCoupons = jabongCoupons;
-        break;
-      case 'shopclues':
-        sortedCoupons = shopcluesCoupons;
+      case 'zomato':
+        sortedCoupons = zomatoCoupons;
         break;
       case 'paytm':
         sortedCoupons = paytmCoupons;
         break;
       default:
-        break;
+        sortedCoupons = [];
     }
 
-    // Update the sorted coupons
     setSortedCoupons(sortedCoupons);
   };
 
@@ -99,33 +155,8 @@ const Coupon = () => {
     ...flipkartCoupons,
     ...myntraCoupons,
     ...snapdealCoupons,
-    ...jabongCoupons,
-    ...shopcluesCoupons,
+    ...zomatoCoupons,
     ...paytmCoupons,
-  ];
-
-  const responsive = {
-    desktop: {
-      breakpoint: { max: 3000, min: 1024 },
-      items: 6,
-    },
-    tablet: {
-      breakpoint: { max: 1024, min: 464 },
-      items: 4,
-    },
-    mobile: {
-      breakpoint: { max: 464, min: 0 },
-      items: 3,
-    },
-  };
-
-  const stores = [
-    { id: 1, name: 'Flipkart', imageUrl: require('../Coupon/stores/2.jpg') },
-    { id: 2, name: 'Amazon', imageUrl: require('../Coupon/stores/1.jpg') },
-    { id: 3, name: 'Jabong', imageUrl: require('../Coupon/stores/4.jpg') },
-    { id: 4, name: 'Myntra', imageUrl: require('../Coupon/stores/3.jpg') },
-    { id: 5, name: 'Paytm', imageUrl: require('../Coupon/stores/5.jpg') },
-    { id: 6, name: 'Snapdeal', imageUrl: require('../Coupon/stores/6.jpg') },
   ];
 
   return (
@@ -144,63 +175,6 @@ const Coupon = () => {
           />
         ))}
       </div>
-    </div>
-  );
-};
-
-const StoreCarousel = ({ handleStoreChange }) => {
-  const classes = useStyles();
-
-  const responsive = {
-    desktop: {
-      breakpoint: { max: 3000, min: 1080 },
-      items: 6,
-    },
-    tablet: {
-      breakpoint: { max: 1080, min: 500 },
-      items: 4,
-    },
-    mobile: {
-      breakpoint: { max: 500, min: 0 },
-      items: 3,
-    },
-  };
-
-  const stores = [
-    { id: 1, name: 'Flipkart', imageUrl: require('../Coupon/stores/2.jpg') },
-    { id: 2, name: 'Amazon', imageUrl: require('../Coupon/stores/1.jpg') },
-    { id: 3, name: 'Jabong', imageUrl: require('../Coupon/stores/4.jpg') },
-    { id: 4, name: 'Myntra', imageUrl: require('../Coupon/stores/3.jpg') },
-    { id: 5, name: 'Paytm', imageUrl: require('../Coupon/stores/5.jpg') },
-    { id: 6, name: 'Snapdeal', imageUrl: require('../Coupon/stores/6.jpg') },
-  ];
-
-  return (
-    <div className={classes.carouselContainer}>
-      <Typography variant="h6">Featured Stores</Typography>
-      <Carousel
-        responsive={responsive}
-        autoPlay={true}
-        autoPlaySpeed={2000}
-        infinite={true}
-        partialVisible={true}
-      >
-        {stores.map((store) => (
-          <Link to={`/Coupon/${store.name.toLowerCase()}`} key={store.id}>
-            <div
-              className={classes.storeContainer}
-              onClick={() => handleStoreChange(store.name.toLowerCase())}
-            >
-              <Paper>
-                <img className={classes.storeImage} src={store.imageUrl} alt={store.name} />
-              </Paper>
-              <Typography variant="body2" className={classes.storeText}>
-                {store.name}
-              </Typography>
-            </div>
-          </Link>
-        ))}
-      </Carousel>
     </div>
   );
 };

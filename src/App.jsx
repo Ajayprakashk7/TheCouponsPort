@@ -17,6 +17,7 @@ import SignUp from "./pages/Account/SignUp";
 import Cart from "./pages/Cart/Cart";
 import Coupon from "./pages/Coupon/Coupon";
 import CouponCarousel from './pages/Coupon/CouponCarousel';
+import StoreCarousel from './pages/Coupon/StoreCarousel';
 import Home from "./pages/Home/Home";
 import Journal from "./pages/Journal/Journal";
 import Offer from "./pages/Offer/Offer";
@@ -45,6 +46,7 @@ const router = createBrowserRouter(
         <Route index element={<Home />}></Route>
         <Route path="/Coupon" element={<Coupon />}></Route>
         <Route path="/Coupon" element={<CouponCarousel />} />
+        <Route path="/Coupon" element={<StoreCarousel />} />
         <Route path="/Coupon/:storeName" element={<Coupon />} /> {/* Route with store ID */}
         <Route path="/shop" element={<Shop />}></Route>
         <Route path="/about" element={<About />}></Route>
