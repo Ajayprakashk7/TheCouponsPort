@@ -70,7 +70,7 @@ const StoreCarousel = ({ handleStoreChange }) => {
 
   return (
     <div className={classes.carouselContainer}>
-      <Typography variant="h6" className={classes.featuredStores}>Featured Stores</Typography>
+      <Typography variant="h6" className={classes.featuredStores}>Coupon Stores</Typography>
       <Carousel
         responsive={responsive}
         swipeable={true}

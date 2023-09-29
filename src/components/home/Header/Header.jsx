@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link, NavLink, useLocation } from "react-router-dom";
-import { FaCaretDown, FaUser, FaShoppingCart } from "react-icons/fa";
+import { FaCaretDown, FaUser } from "react-icons/fa";
 import { motion } from "framer-motion";
 import Image from "../../designLayouts/Image";
 import { navBarList } from "../../../constants";
@@ -27,7 +27,7 @@ const Header = () => {
   }, []);
 
   return (
-    <div className="w-full h-20 bg-white sticky top-0 z-50 border-b-[1px] border-b-gray-200">
+    <div className="w-full h-16 bg-white sticky top-0 z-50 border-b-[1px] border-b-gray-200">
       <nav className="h-full px-4 max-w-container mx-auto relative">
         <Flex className="flex items-center justify-between h-full">
           <Link to="/">
@@ -97,9 +97,7 @@ const Header = () => {
                 <Link to="/signin">
                   <FaUser className="text-[#767676] text-base cursor-pointer hover:text-[#262626]" />
                 </Link>
-                <Link to="/cart">
-                  <FaShoppingCart className="text-[#767676] text-base cursor-pointer hover:text-[#262626]" />
-                </Link>
+                {/* Remove the Link to /cart */}
               </motion.ul>
             )}
           </div>
